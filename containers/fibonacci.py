@@ -87,18 +87,26 @@ class FibIter:
     '''
     def __init__(self, n):
         self.n = n
-        self.current = 0
-        self.next = 1
+        self.f0 = 0
+        self.f1 = 1
+        self.i = 0
 
     def __iter__(self):
         return self
 
     def __next__(self):
-        if self.current >= self.n:
+        if self.i >= self.n:
             raise StopIteration
-        result = self.current
-        self.current, self.next = self.next, self.current + self.next
-        return result
+        elif self.i == 0:
+            self.i += 1
+            return 1
+        elif self.i == 1:
+            self.i += 1
+            return 1
+        else:
+            self.f0, self.f1 = self.f1, self.f0 + self.f1
+            self.i += 1
+            return self.f1
 
 
 def fib_yield(n=None):
