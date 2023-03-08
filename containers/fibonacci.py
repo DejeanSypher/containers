@@ -59,7 +59,7 @@ def fib(n):
 class Fib:
     '''
     This class represents all the fibonacci numbers,
-    but uses O(1) memory to do so.
+    but uses O(1) memory to do so. A
 
     >>> list(Fib(5))
     [1, 1, 2, 3, 5]
