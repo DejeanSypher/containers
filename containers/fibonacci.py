@@ -70,15 +70,10 @@ class Fib:
     def __iter__(self):
         return FibIter(self.n)
 
-    def __getitem__(self, a):
-        if a < 0:
-            raise ValueError("Not a valid index")
-        if a >= self.n:
-            raise IndexError("The Fib index is outside of the range")
-        f0, f1 = 1, 1
-        for i in range(a):
-            f0, f1 = f1, f0 + f1
-        return f0
+    def __repr__(self):
+        if self.n is None:
+            return 'Fib()'
+        return f'Fib({self.n})'
 
 
 class FibIter:
@@ -88,25 +83,22 @@ class FibIter:
     def __init__(self, n):
         self.n = n
         self.f0 = 0
-        self.f1 = 1
+        self.f1 = 0
+        self.f2 = 1
         self.i = 0
 
-    def __iter__(self):
-        return self
-
     def __next__(self):
-        if self.i >= self.n:
-            raise StopIteration
-        elif self.i == 0:
-            self.i += 1
-            return 1
-        elif self.i == 1:
-            self.i += 1
-            return 1
+        if self.n:
+            if self.i >= self.n:
+                raise StopIteration
+        self.i += 1
+        if self.i < 2:
+            return self.f2
         else:
-            self.f0, self.f1 = self.f1, self.f0 + self.f1
-            self.i += 1
-            return self.f1
+            self.f1 = self.f2
+            self.f2 += self.f0
+            self.f0 = self.f1
+            return self.f2
 
 
 def fib_yield(n=None):
