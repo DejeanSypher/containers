@@ -67,13 +67,13 @@ class Fib:
     def __init__(self, n):
         self.n = n
 
-    def __iter__(self):
-        return FibIter(self.n)
-
     def __repr__(self):
         if self.n is None:
             return 'Fib()'
         return f'Fib({self.n})'
+
+    def __iter__(self):
+        return FibIter(self.n)
 
 
 class FibIter:
