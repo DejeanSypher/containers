@@ -115,9 +115,9 @@ class BST(BinaryTree):
         the pattern of _is_bst_satisfied.
         '''
         if self.root:
-            self.root = Node(value)
+            return BST._insert(value, self.root)
         else:
-            BST._insert(value, self.root)
+            self.root = Node(value)
 
     @staticmethod
     def _insert(value, node):
@@ -149,7 +149,7 @@ class BST(BinaryTree):
         correctly until you have gotten insert to work correctly.
         '''
         for x in xs:
-            self.insert(x)
+            return self.insert(x)
 
     def __contains__(self, value):
         '''
