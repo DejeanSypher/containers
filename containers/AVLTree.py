@@ -73,16 +73,15 @@ class AVLTree(BST):
         different from our class hierarchy,
         however, so you will have to adapt their code.
         '''
-        new_root = node.right
-        node.right = new_root.left
-        new_root.left = node
-        left_height = BinaryTree._height(node.left)
-        right_height = BinaryTree._height(node.right)
-        node.height = max(left_height, right_height) + 1
-        left_height = BinaryTree._height(new_root.left)
-        right_height = BinaryTree._height(new_root.right)
-        new_root.height = max(left_height, right_height) + 1
-        return new_root
+        old_root = node
+        if old_root.right:
+            new_root = Node(old_root.right.value)
+            new_root.left = Node(old_root.value)
+            new_root.right = old_root.right.right
+            new_root.left.left = old_root.left
+            new_root.left.right = old_root.right.left
+            return new_root
+        return old_root
 
     @staticmethod
     def _right_rotate(node):
@@ -96,16 +95,15 @@ class AVLTree(BST):
         tree code is fairly different from our class hierarchy,
         however, so you will have to adapt their code.
         '''
-        new_root = node.left
-        node.left = new_root.right
-        new_root.right = node
-        left_height = BinaryTree._height(node.left)
-        right_height = BinaryTree._height(node.right)
-        node.height = max(left_height, right_height) + 1
-        left_height = BinaryTree._height(new_root.left)
-        right_height = BinaryTree._height(new_root.right)
-        new_root.height = max(left_height, right_height) + 1
-        return new_root
+        old_root = node
+        if old_root.left:
+            new_root = Node(old_root.left.value)
+            new_root.right = Node(old_root.value)
+            new_root.left = old_root.left.left
+            new_root.right.right = old_root.right
+            new_root.right.left = old_root.left.right
+            return new_root
+        return old_root
 
     def insert(self, value):
         '''
