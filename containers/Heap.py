@@ -28,6 +28,8 @@ class Heap(BinaryTree):
         If xs is a list (i.e. xs is not None),
         then each element of xs needs to be inserted into the Heap.
         '''
+        self.root = None
+        self.num_nodes = 0
         if xs:
             self.insert_list(xs)
 
@@ -68,17 +70,14 @@ class Heap(BinaryTree):
         FIXME:
         Implement this method.
         '''
+        ret = True
         if node.left:
-            if node.left.value > node.value:
-                return False
-            if not Heap._is_heap_satisfied(node.left):
-                return False
+            ret &= node.value <= node.left.value
+            ret &= Heap._is_heap_satisfied(node.left)
         if node.right:
-            if node.right.value > node.value:
-                return False
-            if not Heap._is_heap_satisfied(node.right):
-                return False
-        return True
+            ret &= node.value <= node.right.value
+            ret &= Heap._is_heap_satisfied(node.right)
+        return ret
 
     def insert(self, value):
         '''
@@ -106,30 +105,25 @@ class Heap(BinaryTree):
         following the same pattern used in the BST and
         AVLTree insert functions.
         '''
-        node = Node(value)
-        if not self.root:
-            self.root = node
-            self.size = 1
+        self.num_nodes += 1
+        binary_str = bin(self.num_nodes)[3:]
+        if self.root is None:
+            self.root = Node(value)
         else:
-            current_node = self.root
-            path = bin(self.size + 1)[3:]
-            for direction in path:
-                if direction == '0':
-                    if not current_node.left:
-                        current_node.left = node
-                        node.parent = current_node
-                        self._bubble_up(node)
-                        self.size += 1
-                        return
-                    current_node = current_node.left
-                else:
-                    if not current_node.right:
-                        current_node.right = node
-                        node.parent = current_node
-                        self._bubble_up(node)
-                        self.size += 1
-                        return
-                    current_node = current_node.right
+            Heap._insert(self.root, value, binary_str)
+
+    @staticmethod
+    def _insert(node, value, binary_str):
+        if binary_str[0] == '0':
+            if len(binary_str) == 1:
+                node.left = Node(value)
+            else:
+                Heap._insert(node.left, value, binary_str[1:])
+        if binary_str[0] == '1':
+            if len(binary_str) == 1:
+                node.right = Node(value)
+            else:
+                Heap._insert(node.right, value, binary_str[1:])
 
     def insert_list(self, xs):
         '''
@@ -149,10 +143,7 @@ class Heap(BinaryTree):
         Implement this function.
         '''
         if self.root:
-            current_node = self.root
-            while current_node.left:
-                current_node = current_node.left
-            return current_node.value
+            return self.root.value
 
     def remove_min(self):
         '''
