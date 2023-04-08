@@ -112,7 +112,7 @@ class Heap(BinaryTree):
             self.size = 1
         else:
             current_node = self.root
-            path = bin(self.size+1)[3:]
+            path = bin(self.size + 1)[3:]
             for direction in path:
                 if direction == '0':
                     if not current_node.left:
