@@ -172,48 +172,41 @@ class Heap(BinaryTree):
         but I personally found dividing up the code
         into two made the most sense.
         '''
-        if self.root is None:
+        if not self.root:
             return
-        self.num_nodes -= 1
-        if self.num_nodes == 0:
+        num_nodes = len(self)
+        if num_nodes == 1:
             self.root = None
             return
-        bottom_right = self._remove_bottom_right()
-        self.root.value = bottom_right.value
+        binary_str = bin(num_nodes)[3:]
+        last_value = self._remove_bottom_right(self.root, binary_str)
+        self.root.value = last_value
         self._trickle(self.root)
 
     @staticmethod
-    def _remove_bottom_right(node=None, parent=None):
-        '''
-        A helper function for remove_min that removes the bottom-right-most
-        node from the heap and returns it. This helper function uses
-        both the current node and its parent to traverse down to the
-        bottom-right-most node.
-        '''
-        if node is None:
-            return None
-        if node.right is None:
-            if parent is not None:
-                parent.right = node.left
-            if node.left is not None:
-                node.left.parent = parent
-            node.left = None
-            return node
-        return Heap._remove_bottom_right(node.right, node)
+    def _remove_bottom_right(self, node, binary_str):
+        alpha = None
+        if binary_str[0] == '0':
+            if len(binary_str) == 1:
+                alpha = node.left.value
+                node.left = None
+            else:
+                alpha = self._remove_bottom_right(node.left, binary_str[1:])
+        if binary_str[0] == '1':
+            if len(binary_str) == 1:
+                alpha = node.right.value
+                node.right = None
+            else:
+                alpha = self._remove_bottom_right(node.right, binary_str[1:])
+        return alpha
 
     @staticmethod
-    def _trickle(node):
-        '''
-        A helper function for remove_min that trickles down the root node
-        until the heap property is satisfied.
-        '''
-        while True:
-            largest = node
-            if node.left is not None and node.left.value > largest.value:
-                largest = node.left
-            if node.right is not None and node.right.value > largest.value:
-                largest = node.right
-            if largest == node:
-                break
-            node.value, largest.value = largest.value, node.value
-            node = largest
+    def _trickle(self, node):
+        if not node:
+            return
+        if node.left and node.value > node.left.value:
+            node.value, node.left.value = node.left.value, node.value
+            self._trickle(node.left)
+        if node.right and node.value > node.right.value:
+            node.value, node.right.value = node.right.value, node.value
+            self._trickle(node.right)
