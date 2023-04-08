@@ -172,24 +172,48 @@ class Heap(BinaryTree):
         but I personally found dividing up the code
         into two made the most sense.
         '''
-        if not self.root:
+        if self.root is None:
             return
-        current_node = self.root
-        path = bin(self.size)[3:]
-        for direction in path:
-            if direction == '0':
-                current_node = current_node.left
-            else:
-                current_node = current_node.right
-        if current_node.parent:
-            if current_node == current_node.parent.left:
-                current_node.parent.left = None
-            else:
-                current_node.parent.right = None
-            current_node.parent = None
-            current_node.left = self.root.left
-            current_node.right = self.root.right
-            if self.root.left:
-                self.root.left.parent = current_node
-            if self.root.right:
-                self.root.right.parent
+        self.num_nodes -= 1
+        if self.num_nodes == 0:
+            self.root = None
+            return
+        bottom_right = self._remove_bottom_right()
+        self.root.value = bottom_right.value
+        self._trickle(self.root)
+
+    @staticmethod
+    def _remove_bottom_right(node=None, parent=None):
+        '''
+        A helper function for remove_min that removes the bottom-right-most
+        node from the heap and returns it. This helper function uses
+        both the current node and its parent to traverse down to the
+        bottom-right-most node.
+        '''
+        if node is None:
+            return None
+        if node.right is None:
+            if parent is not None:
+                parent.right = node.left
+            if node.left is not None:
+                node.left.parent = parent
+            node.left = None
+            return node
+        return Heap._remove_bottom_right(node.right, node)
+
+    @staticmethod
+    def _trickle(node):
+        '''
+        A helper function for remove_min that trickles down the root node
+        until the heap property is satisfied.
+        '''
+        while True:
+            largest = node
+            if node.left is not None and node.left.value > largest.value:
+                largest = node.left
+            if node.right is not None and node.right.value > largest.value:
+                largest = node.right
+            if largest == node:
+                break
+            node.value, largest.value = largest.value, node.value
+            node = largest
