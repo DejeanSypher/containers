@@ -119,11 +119,15 @@ class Heap(BinaryTree):
                 node.left = Node(value)
             else:
                 Heap._insert(node.left, value, binary_str[1:])
+            if node.value > node.left.value:
+                node.value, node.left.value = node.left. value, node.value
         if binary_str[0] == '1':
             if len(binary_str) == 1:
                 node.right = Node(value)
             else:
                 Heap._insert(node.right, value, binary_str[1:])
+            if node.value > node.right.value:
+                node.value, node.right.value = node.right.value, node.value
 
     def insert_list(self, xs):
         '''
