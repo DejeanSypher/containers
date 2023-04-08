@@ -179,12 +179,12 @@ class Heap(BinaryTree):
             self.root = None
             return
         binary_str = bin(num_nodes)[3:]
-        last_value = self._remove_bottom_right(self.root, binary_str)
-        self.root.value = last_value
+        final_value = self._remove_bottom_right(self.root, binary_str)
+        self.root.value = final_value
         self._trickle(self.root)
 
     @staticmethod
-    def _remove_bottom_right(self, node, binary_str):
+    def _remove_bottom_right(node, binary_str):
         alpha = None
         if binary_str[0] == '0':
             if len(binary_str) == 1:
@@ -202,11 +202,17 @@ class Heap(BinaryTree):
 
     @staticmethod
     def _trickle(self, node):
-        if not node:
-            return
-        if node.left and node.value > node.left.value:
-            node.value, node.left.value = node.left.value, node.value
-            self._trickle(node.left)
-        if node.right and node.value > node.right.value:
-            node.value, node.right.value = node.right.value, node.value
-            self._trickle(node.right)
+        if node.left and node.right:
+            if node.value > node.left.value and node.value < node.right.value:
+                node.value, node.left.value = node.left.value, node.value
+                self._trickle(node.left)
+            if node.value > node.right.value and node.value < node.left.value:
+                node.value, node.right.value = node.right.value, node.value
+                self._trickle(node.right)
+            if node.value > node.right.value and node.value > node.left.value:
+                if node.left.value < node.right.value:
+                    node.value, node.left.value = node.left.value, node.value
+                    self._trickle(node.left)
+                if node.right.value < node.left.value:
+                    node.value, node.right.value = node.right.value, node.value
+                    self._trickle(node.right)
