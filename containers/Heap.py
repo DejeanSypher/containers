@@ -68,17 +68,15 @@ class Heap(BinaryTree):
         FIXME:
         Implement this method.
         '''
-        if node.left and node.left.value < node.value:
+        if node.left and node.left.value > node.value:
             return False
-        if node.right and node.right.value < node.value:
+        if node.right and node.right.value > node.value:
             return False
-        left_satisfied = True
-        right_satisfied = True
-        if node.left:
-            left_satisfied = Heap._is_heap_satisfied(node.left)
-        if node.right:
-            right_satisfied = Heap._is_heap_satisfied(node.right)
-        return left_satisfied and right_satisfied
+        if node.left and not Heap._is_heap_satisfied(node.left):
+            return False
+        if node.right and not Heap._is_heap_satisfied(node.right):
+            return False
+        return True
 
     def insert(self, value):
         '''
