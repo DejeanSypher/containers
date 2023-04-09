@@ -202,25 +202,28 @@ class Heap(BinaryTree):
 
     @staticmethod
     def _trickle(node):
-        left = node.left
-        right = node.right
-        if left and right:
-            largest_child = Heap._get_largest_child(left, right)
+        if node.left and node.right:
+            if node.left.value > node.right.value:
+                largest_child = node.left
+            else:
+                largest_child = node.right
             if node.value > largest_child.value:
                 temp = node.value
                 node.value = largest_child.value
                 largest_child.value = temp
                 largest_child = Heap._trickle(largest_child)
-                if largest_child == left:
-                    node.left = largest_child
-                else:
-                    node.right = largest_child
-        elif left and node.value > left.value:
-            node.value, left.value = left.value, node.value
-            node.left = Heap._trickle(left)
-        elif right and node.value > right.value:
-            node.value, right.value = right.value, node.value
-            node.right = Heap._trickle(right)
+        elif node.left:
+            if node.value > node.left.value:
+                temp2 = node.value
+                node.value = node.left.value
+                node.left.value = temp2
+                node.left = Heap._trickle(node.left)
+        elif node.right:
+            if node.value > node.right.value:
+                temp3 = node.value
+                node.value = node.right.value
+                node.right.value = temp3
+                node.right = Heap._trickle(node.right)
         return node
 
     @staticmethod
