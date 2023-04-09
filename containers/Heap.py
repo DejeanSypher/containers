@@ -201,18 +201,31 @@ class Heap(BinaryTree):
         return alpha
 
     @staticmethod
-    def _trickle(self, node):
-        if node.left and node.right:
-            if node.value > node.left.value and node.value < node.right.value:
-                node.value, node.left.value = node.left.value, node.value
-                self._trickle(node.left)
-            if node.value > node.right.value and node.value < node.left.value:
-                node.value, node.right.value = node.right.value, node.value
-                self._trickle(node.right)
-            if node.value > node.right.value and node.value > node.left.value:
-                if node.left.value < node.right.value:
-                    node.value, node.left.value = node.left.value, node.value
-                    self._trickle(node.left)
-                if node.right.value < node.left.value:
-                    node.value, node.right.value = node.right.value, node.value
-                    self._trickle(node.right)
+    def _trickle(node):
+        left = node.left
+        right = node.right
+        if left and right:
+            largest_child = Heap._get_largest_child(left, right)
+            if node.value > largest_child.value:
+                temp = node.value
+                node.value = largest_child.value
+                largest_child.value = temp
+                largest_child = Heap._trickle(largest_child)
+                if largest_child == left:
+                    node.left = largest_child
+                else:
+                    node.right = largest_child
+        elif left and node.value > left.value:
+            node.value, left.value = left.value, node.value
+            node.left = Heap._trickle(left)
+        elif right and node.value > right.value:
+            node.value, right.value = right.value, node.value
+            node.right = Heap._trickle(right)
+        return node
+
+    @staticmethod
+    def _get_largest_child(left, right):
+        if left.value > right.value:
+            return left
+        else:
+            return right
