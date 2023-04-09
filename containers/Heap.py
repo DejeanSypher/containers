@@ -225,4 +225,3 @@ class Heap(BinaryTree):
                     node.value, node.right.value = node.right.value, node.value
                     node.right = Heap._trickle(node.right)
         return node
-
