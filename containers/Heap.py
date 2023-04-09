@@ -105,7 +105,6 @@ class Heap(BinaryTree):
         following the same pattern used in the BST and
         AVLTree insert functions.
         '''
-        num_nodes = self.__len__()
         self.num_nodes += 1
         binary_str = bin(self.num_nodes)[3:]
         if self.root is None:
