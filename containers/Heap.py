@@ -185,20 +185,24 @@ class Heap(BinaryTree):
 
     @staticmethod
     def _remove_bottom_right(node, binary_str):
-        alpha = None
+        alp = None
         if binary_str[0] == '0':
             if len(binary_str) == 1:
-                alpha = node.left.value
-                node.left = None
+                if node.left:
+                    alp = node.left.value
+                    node.left = None
             else:
-                alpha = Heap._remove_bottom_right(node.left, binary_str[1:])
+                if node.left:
+                    alp = Heap._remove_bottom_right(node.left, binary_str[1:])
         if binary_str[0] == '1':
             if len(binary_str) == 1:
-                alpha = node.right.value
-                node.right = None
+                if node.right:
+                    alp = node.right.value
+                    node.right = None
             else:
-                alpha = Heap._remove_bottom_right(node.right, binary_str[1:])
-        return alpha
+                if node.right:
+                    alp = Heap._remove_bottom_right(node.right, binary_str[1:])
+        return alp
 
     @staticmethod
     def _trickle(node):
