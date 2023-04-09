@@ -202,33 +202,27 @@ class Heap(BinaryTree):
 
     @staticmethod
     def _trickle(node):
-        if node.left and node.right:
-            if node.left.value > node.right.value:
-                largest_child = node.left
-            else:
-                largest_child = node.right
-            if node.value > largest_child.value:
-                temp = node.value
-                node.value = largest_child.value
-                largest_child.value = temp
-                largest_child = Heap._trickle(largest_child)
-        elif node.left:
+        if node.left:
             if node.value > node.left.value:
-                temp2 = node.value
-                node.value = node.left.value
-                node.left.value = temp2
+                node.value, node.left.value = node.left.value, node.value
                 node.left = Heap._trickle(node.left)
-        elif node.right:
+        if node.right:
             if node.value > node.right.value:
-                temp3 = node.value
-                node.value = node.right.value
-                node.right.value = temp3
+                node.value, node.right.value = node.right.value, node.value
                 node.right = Heap._trickle(node.right)
+        if node.left and node.right:
+            if node.value > node.left.value and node.value < node.right.value:
+                node.value, node.left.value = node.left.value, node.value
+                node.left = Heap._trickle(node.left)
+            if node.value > node.right.value and node.value < node.left.value:
+                node.value, node.right.value = node.right.value, node.value
+                node.right = Heap._trickle(node.right)
+            if node.value > node.right.value and node.value > node.left.value:
+                if node.left.value < node.right.value:
+                    node.value, node.left.value = node.left.value, node.value
+                    node.left = Heap._trickle(node.left)
+                if node.right.value < node.left.value:
+                    node.value, node.right.value = node.right.value, node.value
+                    node.right = Heap._trickle(node.right)
         return node
 
-    @staticmethod
-    def _get_largest_child(left, right):
-        if left.value > right.value:
-            return left
-        else:
-            return right
